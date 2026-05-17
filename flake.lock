@@ -51,31 +51,20 @@
         "type": "github"
       }
     },
-    "flux-bins": {
-      "flake": false,
-      "locked": {
-        "path": "flux-bins.nix",
-        "type": "path"
-      },
-      "original": {
-        "path": "flux-bins.nix",
-        "type": "path"
-      },
-      "parent": []
-    },
     "flux-rs": {
       "flake": false,
       "locked": {
-        "lastModified": 1778793337,
-        "narHash": "sha256-nix+By7Ymn91EFrFnj+DUkA9aGvhbE5lE9v1J50+72Y=",
-        "owner": "flux-rs",
-        "repo": "flux",
-        "rev": "9e4be6e13f487fe70ee11eb9f586215e42b7397e",
+        "lastModified": 1779035967,
+        "narHash": "sha256-pqVzirjrHs4bnT77sk0hOLo6rrA1nBhhoAaRPa9dW7k=",
+        "owner": "MaxTheMooshroom",
+        "repo": "flux-rs",
+        "rev": "7dae4f681d0560868a9e6977b5a5fb02e867f4b3",
         "type": "github"
       },
       "original": {
-        "owner": "flux-rs",
-        "repo": "flux",
+        "owner": "MaxTheMooshroom",
+        "ref": "flux-bin/get_cargo_path",
+        "repo": "flux-rs",
         "type": "github"
       }
     },
@@ -93,6 +82,23 @@
         "mlib"
       ]
     },
+    "liquid-fixpoint": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778676410,
+        "narHash": "sha256-uTKlJVc69bg8VA38p3erl1ICEXILhSvvqbH/EuHkImU=",
+        "owner": "ucsd-progsys",
+        "repo": "liquid-fixpoint",
+        "rev": "1ec005195bc93153b62983004c87632a9a1f8c31",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ucsd-progsys",
+        "repo": "liquid-fixpoint",
+        "rev": "1ec005195bc93153b62983004c87632a9a1f8c31",
+        "type": "github"
+      }
+    },
     "mlib": {
       "inputs": {
         "flake-parts": "flake-parts_2",
@@ -100,11 +106,11 @@
         "nixpkgs-lib": "nixpkgs-lib_2"
       },
       "locked": {
-        "lastModified": 1778806927,
-        "narHash": "sha256-gMYpAu/psl3tQJcOoVEBHfVJTsKuU0P3XR3ps8dOMtg=",
+        "lastModified": 1779018734,
+        "narHash": "sha256-KGuW0VSIZlXUxn2YYV17w4t1EX4lHCVuXCB6AzM0Lfc=",
         "owner": "MaxTheMooshroom",
         "repo": "mlib.nix",
-        "rev": "21895bb907eb65743ca96f5342707226a17f942f",
+        "rev": "5f2f79190cec72b1cb9161b3dccbfe41269bc6be",
         "type": "github"
       },
       "original": {
@@ -175,28 +181,16 @@
         "type": "github"
       }
     },
-    "packages-joined": {
-      "flake": false,
-      "locked": {
-        "path": "packages-joined.nix",
-        "type": "path"
-      },
-      "original": {
-        "path": "packages-joined.nix",
-        "type": "path"
-      },
-      "parent": []
-    },
     "root": {
       "inputs": {
         "flake-module": "flake-module",
         "flake-parts": "flake-parts",
-        "flux-bins": "flux-bins",
         "flux-rs": "flux-rs",
+        "liquid-fixpoint": "liquid-fixpoint",
         "mlib": "mlib",
         "nixpkgs": "nixpkgs",
-        "packages-joined": "packages-joined",
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay",
+        "toolchain2manifest": "toolchain2manifest"
       }
     },
     "rust-overlay": {
@@ -217,6 +211,25 @@
         "rev": "a6cb2224d975e16b5e67de688c6ad306f7203425",
         "type": "github"
       }
+    },
+    "toolchain2manifest": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "helpers/toolchain-to-manifest",
+        "type": "path"
+      },
+      "original": {
+        "path": "helpers/toolchain-to-manifest",
+        "type": "path"
+      },
+      "parent": []
     }
   },
   "root": "root",
