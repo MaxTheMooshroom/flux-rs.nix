@@ -54,11 +54,11 @@
     "flux-rs": {
       "flake": false,
       "locked": {
-        "lastModified": 1779035967,
-        "narHash": "sha256-pqVzirjrHs4bnT77sk0hOLo6rrA1nBhhoAaRPa9dW7k=",
+        "lastModified": 1779342799,
+        "narHash": "sha256-aohYD/DtOtkmgOuKUiRRK0j7LRELz1Z19O/Ug7X3z64=",
         "owner": "MaxTheMooshroom",
         "repo": "flux-rs",
-        "rev": "7dae4f681d0560868a9e6977b5a5fb02e867f4b3",
+        "rev": "244e15ac7983c607997bb1ccf58ba9628e44b7af",
         "type": "github"
       },
       "original": {
@@ -222,14 +222,18 @@
         ]
       },
       "locked": {
-        "path": "helpers/toolchain-to-manifest",
-        "type": "path"
+        "lastModified": 1779344477,
+        "narHash": "sha256-l6PDwxdnj7mnAdTNOMkYvi8/qA36BgimMqRn5AiWPHw=",
+        "owner": "MaxTheMooshroom",
+        "repo": "rust-toolchain-to-manifest",
+        "rev": "2e106fcc4e2e9141551856f5737cae0a423156e8",
+        "type": "github"
       },
       "original": {
-        "path": "helpers/toolchain-to-manifest",
-        "type": "path"
-      },
-      "parent": []
+        "owner": "MaxTheMooshroom",
+        "repo": "rust-toolchain-to-manifest",
+        "type": "github"
+      }
     }
   },
   "root": "root",

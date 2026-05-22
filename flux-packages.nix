@@ -1,8 +1,9 @@
 self:
 {
-  pkgs,
-
   lib,
+  mlib,
+
+  pkgs,
   newScope,
   stdenvNoCC,
 
@@ -29,57 +30,67 @@ self:
   ...
 }@args:
 let
-  inherit rust-bins;
+  wrapCargo = self.callPackage ./wrap-cargo.nix {};
+  mkFluxBins = self.callPackage ./make-flux-bins.nix {};
 
-  staged = {
-    rustPlatform = {
-      stage0 = makeRustPlatform {
+  # wrapAsFlux = wrapAsMainProgram "flux";
+  # wrapAsMainProgram = mainProgram: drv: drv // {
+  #   meta = drv.meta or {} // {
+  #     inherit mainProgram;
+  #   };
+  # };
+
+  stages = [
+    # stage 0
+    ({...}: {
+      flux-bins = mkFluxBins (makeRustPlatform {
         rustc = rust-bins;
         cargo = rust-bins;
-      };
+      });
+    })
 
-      stage1 = makeRustPlatform {
+    # # stage 1
+    # ({ flux-bins, ... }: rec {
+    #   cargo = wrapCargo flux-bins;
+    #
+    #   rustPlatform = makeRustPlatform {
+    #     inherit cargo;
+    #     rustc = rust-bins;
+    #     # rustc = wrapAsFlux flux-bins;
+    #   };
+    # })
+    #
+    # # stage 2
+    # ({ flux-bins, rustPlatform, ... }: {
+    #   flux-bins = self.callPackage ./packages-joined.nix {
+    #     bins = flux-bins;
+    #     inherit rustPlatform;
+    #   };
+    # })
+
+    # stage 3
+    ({ flux-bins, ... }: rec {
+      cargo = wrapCargo flux-bins;
+
+      rustPlatform = makeRustPlatform {
+        inherit cargo;
         rustc = rust-bins;
-        cargo = self.cargo;
+        # rustc = wrapAsFlux flux-bins;
       };
-    };
-  };
+    })
 
-  cargo = stdenvNoCC.mkDerivation (self': {
-    name = "cargo-wrapper";
-    src = rust-bins;
+    # stage 4
+    ({ flux-bins, ... }: {
+      flux-driver = flux-bins;
+      xtask       = flux-bins;
+      flux        = flux-bins;
+      cargo-flux  = flux-bins;
 
-    buildInputs = [ self.flux-bins ];
-    propagatedBuildInputs = [ self.flux-bins ];
-    nativeBuildInputs = [ makeWrapper ];
+      # buildFluxPackage = self.callPackage ./build-flux-package.nix {};
+    })
+  ];
 
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ./bin/cargo $out/bin/cargo
-    '';
-
-    postFixup = ''
-      wrapProgram $out/bin/cargo                                      \
-        --set RUSTC       ${lib.getExe' self.flux-bins "flux"}        \
-        --set FLUX_DRIVER ${lib.getExe' self.flux-bins "flux-driver"}
-    '';
-
-    meta = {
-      mainProgram = "cargo";
-    };
-  });
+  stagePump = lib.flip (mlib.trivial.fanout lib.mergeAttrs);
+  finalized = builtins.foldl' stagePump {} stages;
 in
-{
-  inherit cargo;
-
-  flux-bins = self.callPackage ./packages-joined.nix {
-    rustPlatform = staged.rustPlatform.stage0;
-  };
-
-  flux-driver = self.flux-bins;
-  xtask       = self.flux-bins;
-  flux        = self.flux-bins;
-  cargo-flux  = self.flux-bins;
-
-  rustPlatform = staged.rustPlatform.stage1;
-}
+  finalized

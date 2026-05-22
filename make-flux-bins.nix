@@ -3,18 +3,13 @@
   runCommand,
   toolchain2manifest,
 
-  rustPlatform,
-
-  rust-bins,
   flux-rs,
-
   makeWrapper,
   liquid-fixpoint,
   z3,
 
-  # stdenvNoCC,
-
-  ...
+  rust-bins,
+  bins ? rust-bins,
 }:
 assert lib.assertMsg
   ((builtins.compareVersions z3.version "4.15") != -1)
@@ -51,7 +46,7 @@ let
         '';
       builtins.elemAt cargo_version-parts 1;
 in
-  rustPlatform.buildRustPackage (self: {
+  rustPlatform: rustPlatform.buildRustPackage (self: {
     name = "flux-rs";
     src = flux-rs;
     # cargoHash = "";
@@ -69,14 +64,16 @@ in
       z3
     ];
 
-    propagatedBuildInputs = [ rust-bins ];
+    propagatedBuildInputs = [ bins liquid-fixpoint z3 ];
 
     cargoBuildType = "release";
     cargoBuildFlags = [ "--workspace" ];
 
     postFixup = ''
-      wrapProgram $out/bin/cargo-flux --set FLUX        $out/bin/flux
-      wrapProgram $out/bin/flux       --set FLUX_DRIVER $out/bin/flux-driver
+      wrapProgram $out/bin/cargo-flux           \
+        --set FLUX $out/bin/flux                \
+        --set FLUX_DRIVER $out/bin/flux-driver
+      wrapProgram $out/bin/flux --set FLUX_DRIVER $out/bin/flux-driver
     '';
 
     # Doesn't have cargo tests. Flux's tests are regression tests that

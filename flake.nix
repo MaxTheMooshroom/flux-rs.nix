@@ -21,10 +21,12 @@
     # nixdoc.url = "github:nix-community/nixdoc";
     flake-module = { flake = false; url = ./flake-module.nix; };
 
-    toolchain2manifest.url = ./helpers/toolchain-to-manifest;
-    toolchain2manifest.inputs = {
-      flake-parts.follows = "flake-parts";
-      nixpkgs.follows = "nixpkgs";
+    toolchain2manifest = {
+      url = "github:MaxTheMooshroom/rust-toolchain-to-manifest";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
@@ -37,7 +39,7 @@
         (import inputs.flake-module)
       ];
 
-      perSystem = { system, self', pkgs, mkRustBins, rust-bins, ... }: {
+      perSystem = { system, inputs', self', pkgs, mkRustBins, rust-bins, ... }: {
         _module.args = {
           mkRustBins = inputs.rust-overlay.lib.mkRustBin {} pkgs;
 
@@ -47,20 +49,15 @@
         };
 
         packageSets = {
-          helpers = mlib.lib.callPackageSetWith pkgs ./helpers.nix {
-            inherit system;
-
-            inherit (inputs)
-              toolchain2manifest
-              ;
-          };
-
           dependencies = lib.flip (mlib.lib.callPackageSetWith pkgs) {}
             (finalAttrs: { haskell, haskellPackages, fetchFromGitHub, ... }: {
               haskellLib = haskell.lib.compose;
 
+              inherit (inputs'.toolchain2manifest.packages)
+                toolchain2manifest
+                ;
+
               liquid-fixpoint = finalAttrs.callPackage ({ haskellLib, ... }:
-                # with finalAttrs.haskellLib;
                 lib.flip haskellLib.overrideCabal haskellPackages.liquid-fixpoint (prev: {
                   version = "nightly";
                   src = inputs.liquid-fixpoint;
@@ -78,11 +75,11 @@
 
             inherit (self'.packageSets.dependencies)
               liquid-fixpoint
-              ;
-
-            inherit (self'.packageSets.helpers)
               toolchain2manifest
               ;
+
+            cargo-unwrapped = pkgs.cargo;
+            mlib = mlib.lib;
           };
         };
 
@@ -93,7 +90,7 @@
             flux
             ;
 
-          default = self'.packageSets.fluxPackages.bins;
+          default = self'.packageSets.fluxPackages.flux-bins;
         };
 
         devShells = {
@@ -104,7 +101,6 @@
 
             packages = [
               rust-bins
-              # pkgs.haskellPackages.liquid-fixpoint
               self'.packageSets.dependencies.liquid-fixpoint
               pkgs.z3
             ];
@@ -114,9 +110,9 @@
             name = "flux-use-shell";
 
             packages = [
-              rust-bins
+              self'.packageSets.fluxPackages.cargo
+              self'.packageSets.fluxPackages.flux-bins
 
-              # pkgs.haskellPackages.liquid-fixpoint
               self'.packageSets.dependencies.liquid-fixpoint
               pkgs.rustup
               pkgs.z3
