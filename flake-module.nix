@@ -1,67 +1,38 @@
 { inputs, config, ... }:
 {
   imports = [
-    ({ ... }: {
-      config = {
-        flake.overlays.extractions = final: prev:
-          let
-            inherit (prev) lib;
+    ({ _module.args.mlib = inputs.mlib.lib; })
 
-            derivations = {
-              /**
-                Extract an executable from a derivation and optionally wrap it
-                with environment variables required during runtime.
-              */
-              extractBinFrom =
-                drv: { name, drv, mainProgram ? name, bin-env ? null }:
-                  prev.stdenvNoCC.mkDerivation (finalAttrs: {
-                    inherit name;
-
-                    src = drv;
-                    outputs = [ "out" ];
-
-                    meta = { inherit mainProgram; };
-
-                    installPhase = ''
-                      mkdir -p $out/bin
-                      cp ./bin/${mainProgram} $out/bin/${mainProgram}
-                    '';
-                  } // lib.optionalAttrs (!isNull bin-env && bin-env != {}) {
-                    buildInputs = [ prev.makeWrapper ];
-                    postFixup = ''
-                      wrapProgram ./bin/${mainProgram} ${
-                        builtins.concatStringsSep
-                          " "
-                          (lib.mapAttrsToList (n: v: "--set \"${n}\" \"${v}\"") bin-env)
-                      }
-                    '';
-                  });
-
-              /** Extract binaries from a derivation */
-              extractBinsFrom = drv: opts':
-                lib.mapAttrsToList
-                  (name: v: final.lib.extractBinFrom drv (v // { inherit name; }))
-                  opts';
-          };
-        in
-        {
-          inherit derivations;
-
-          inherit (derivations)
-            extractBinFrom
-            extractBinsFrom
-            ;
+    (
+      {
+        lib,
+        mlib,
+        flake-parts-lib,
+        ...
+      }:
+      flake-parts-lib.mkTransposedPerSystemModule {
+        name = "tests";
+        option = lib.mkOption {
+          type = lib.types.lazyAttrsOf mlib.types.packageSet;
+          default = { };
+          description = ''
+            A set of package-sets, which are sets of tests and/or nested
+            package-sets of tests.
+          '';
         };
-      };
-    })
+        file = ./flake-module.nix;
+      }
+    )
   ];
 
   config = {
-    perSystem = { system, lib, ... }: {
-      _module.args.pkgs = import inputs.nixpkgs {
-        inherit system;
-        overlays = builtins.attrValues config.flake.overlays;
+    perSystem =
+      { system, lib, ... }:
+      {
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = builtins.attrValues config.flake.overlays;
+        };
       };
-    };
   };
 }
