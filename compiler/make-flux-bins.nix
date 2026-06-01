@@ -76,25 +76,9 @@ let
     # are run using `cargo xtask test`. Given that regression tests are
     # tests of the source and not necessarily tests of the validity of
     # the build artifact(s), I've opted not to include them in the
-    # main derivation, but are available in `passthru.tests`.
+    # main derivation, but are available as the flake's
+    # `tests.<system>.flux.cargoXtaskTest`.
     doCheck = false;
-
-    # passthru.tests.xtask-regression = stdenvNoCC.mkDerivation (self': {
-    #   name = "flux-test-xtask-regression";
-    #   src = self.src.outPath;
-    #
-    #   SANDBOXED = 1;
-    #   FLUX_TOOLCHAIN_CARGO_VERSION_OVERRIDE = cargo_version;
-    #
-    #   doCheck = false;
-    #
-    #   buildInputs = [ rust-bins result ];
-    #   buildPhase = ''
-    #     xtask --offline test
-    #   '';
-    #
-    #   installPhase = "touch $out";
-    # });
 
     meta = {
       description = "Refinement Types for Rust";
