@@ -11,7 +11,8 @@ infrastructure, with additional toolchain orchestration aided by
 
 Building your crate with this flake's infrastructure will build the
 same as before, but provides the override for the flux-rs git repo
-and runs `cargo flux check` during the `checkPhase`.
+and runs `cargo flux check` at the end of the `checkPhase`
+(as `postCheck`).
 
 ## Quickstart
 
@@ -145,7 +146,7 @@ The checkPhase integration is added via
 `packageSets.<system>.fluxPlatform.fluxHooks.cargoFluxHook`,
 and comes included with the `packages.<system>.cargo` output.
 
-To get everything you need for developing with flux, just add
+To get everything you need for developing with flux, add
 the cargo output to your devshell:
 
 ```nix
@@ -164,17 +165,18 @@ the cargo output to your devshell:
 }
 ```
 
-Afterwards, just run `nix develop`, and you have access to
-standard rust/cargo infrastructure in addition to being able
+Afterwards you can run `nix develop` to have access to
+standard rust/cargo infrastructure as well as being able
 to run `cargo flux check`.
 
 ## buildFluxPackage Documentation
 
 You can skip the `cargo flux check` command during building by
-setting `dontCargoFlux` to `fluxPlatform.buildFluxPackage`.
+setting `dontCargoFlux` for `fluxPlatform.buildFluxPackage`.
 
-If you need to vendor the sources, use `fluxPlatform.importCargoLock`,
-so that your `flux-rs` git cargo dependency gets vendored properly.
+If you need to vendor the sources, use `fluxPlatform.importCargoLock`
+instead of `rustPlatform.importCargoLock` so that your `flux-rs` git
+cargo dependency gets vendored properly.
 
 ```nix
 fluxPlatform.buildFluxPackage (finalAttrs: {
