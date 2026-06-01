@@ -41,7 +41,7 @@ let
     name = "flux-rs";
     src = flux-src;
     # cargoHash = "";
-    cargoHash = "sha256-QUGjEa7G8deCKFPhRWmPeA7u7mlVdz/CqsKay3K/TTg=";
+    cargoHash = "sha256-hlxkZNNubQi3Xt4q/c9i+Ee9Tx+9QaJY6F4O6ZSVjjM=";
 
     CARGO_NET_OFFLINE = "true";
     FLUX_TOOLCHAIN_CARGO_VERSION_OVERRIDE = cargo_version;
