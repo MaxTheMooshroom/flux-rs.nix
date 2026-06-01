@@ -2,8 +2,9 @@
 # Flux for Nix
 
 [Flux](https://flux-rs.github.io/flux/)
-is a compiler-extension for validation of
-[refinement-types](https://en.wikipedia.org/wiki/Refinement_type).
+is a rustc extension for validation of
+[refinement-type](https://en.wikipedia.org/wiki/Refinement_type)
+predicates.
 
 This flake packages flux as a wrapper around nixpkgs' `rustPlatform`
 infrastructure, with additional toolchain orchestration aided by
