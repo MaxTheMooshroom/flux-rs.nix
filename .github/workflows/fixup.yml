@@ -9,18 +9,19 @@ on:
       - staging
 
 jobs:
-  validate:
+  fixup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
-          persist-credentials: false
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - uses: DeterminateSystems/determinate-nix-action@v3.21.0
 
       - name: "Check Flake Outputs"
-        run: nix flake check --accept-flake-config .
+        run: nix flake check --no-update-lock-file --accept-flake-config .
 
       - name: "Nix Formatter"
-        run: nix fmt -- --ci
+        run: nix fmt --no-update-lock-file
+
+      - uses: autofix-ci/action@v1
