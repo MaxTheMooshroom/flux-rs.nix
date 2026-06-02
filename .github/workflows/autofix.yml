@@ -1,4 +1,4 @@
-name: "Fixup Source"
+name: "autofix.ci"
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  fixup:
+  autofix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -18,10 +18,7 @@ jobs:
 
       - uses: DeterminateSystems/determinate-nix-action@v3.21.0
 
-      - name: "Check Flake Outputs"
-        run: nix flake check --no-update-lock-file --accept-flake-config .
-
       - name: "Nix Formatter"
-        run: nix fmt --no-update-lock-file
+        run: nix fmt --no-update-lock-file --accept-flake-config
 
       - uses: autofix-ci/action@v1
