@@ -30,4 +30,4 @@ jobs:
           cache-flake-outputs:    "cargo,cargo-flux,flux,flux-driver"
           cache-enable-flakehub:  true
           cache-enable-cachix:    true
-          cache-enable-cachix:    flux-rs
+          cache-name-cachix:      flux-rs
