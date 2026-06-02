@@ -1,0 +1,23 @@
+name: "Validate Source"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: DeterminateSystems/flakehub-cache-action@v3.21.0
+
+      - name: "Nix Formatter"
+        run: nix fmt -- --ci
+
+      - name: "Check Flake Outputs"
+        run: nix flake check --accept-flake-config .

@@ -1,0 +1,33 @@
+name: "Publish Tagged Releases to FlakeHub and Cachix"
+on:
+  push:
+    tags:
+      - "v?[0-9]+.[0-9]+.[0-9]+*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The version tag to publish to FlakeHub"
+        type: "string"
+        required: true
+jobs:
+  publish:
+    environment: Tags
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: "write"
+      contents: "read"
+    steps:
+      - uses: "actions/checkout@v6"
+        with:
+          persist-credentials: false
+          ref: "${{ (inputs.tag != null) && format('refs/tags/{0}', inputs.tag) || '' }}"
+
+      - uses: MaxTheMooshroom/actions-nix-flake-release@main
+        with:
+          flakehub-versioning-kind: "tagged"
+          flakehub-release-tag: ${{ inputs.tag }}
+
+          cache-flake-outputs:    "cargo,cargo-flux,flux,flux-driver"
+          cache-enable-flakehub:  true
+          cache-enable-cachix:    true
+          cache-enable-cachix:    flux-rs
