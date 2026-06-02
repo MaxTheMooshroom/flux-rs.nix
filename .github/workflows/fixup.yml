@@ -1,0 +1,26 @@
+name: "Fixup Source"
+
+on:
+  pull_request:
+    branches:
+      - staging
+  pull_request_target:
+    branches:
+      - staging
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          ref: ${{ github.head_ref }}
+
+      - uses: DeterminateSystems/determinate-nix-action@v3.21.0
+
+      - name: "Check Flake Outputs"
+        run: nix flake check --accept-flake-config .
+
+      - name: "Nix Formatter"
+        run: nix fmt -- --ci
