@@ -19,7 +19,7 @@ jobs:
       - uses: DeterminateSystems/determinate-nix-action@v3.21.0
         with:
           extra-conf: |
-            substituters=https://cache.nixos.org/ https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
+            extra-substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
 
       - uses: ./cache-flake-formatter
         with:
