@@ -1,0 +1,31 @@
+name: "autofix.ci"
+
+on:
+  pull_request:
+    branches:
+      - staging
+
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: DeterminateSystems/determinate-nix-action@v3.21.0
+        with:
+          extra-conf: |
+            extra-substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
+
+      - uses: ./.github/actions/cache-flake-formatter
+        env:
+          CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      - name: "Nix Formatter"
+        run: nix formatter run --no-update-lock-file --accept-flake-config
+
+      - uses: autofix-ci/action@v1
