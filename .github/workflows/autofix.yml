@@ -21,7 +21,7 @@ jobs:
           extra-conf: |
             extra-substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
 
-      - uses: ./cache-flake-formatter
+      - uses: ./.github/actions/cache-flake-formatter
         with:
           cache-name-cachix: flux-rs
 
