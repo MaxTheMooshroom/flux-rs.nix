@@ -20,8 +20,8 @@ jobs:
             extra-substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
 
       - uses: ./.github/actions/cache-flake-formatter
-        with:
-          cache-name-cachix: flux-rs
+        env:
+          CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: "Nix Formatter: Run"
         run:  nix formatter run -- --ci
