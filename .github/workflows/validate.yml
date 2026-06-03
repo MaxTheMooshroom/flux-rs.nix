@@ -15,9 +15,17 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - uses: DeterminateSystems/determinate-nix-action@v3.21.0
+        with:
+          extra-conf: |
+            extra-substituters=https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
 
-      - name: "Nix Formatter"
-        run: nix fmt -- --ci
+      - uses: ./cache-flake-formatter
+        with:
+          cache-name-cachix: flux-rs
+
+      - name: "Nix Formatter: Run"
+        run:  nix formatter run -- --ci
 
       - name: "Check Flake Outputs"
-        run: nix flake check --accept-flake-config .
+        run:  nix flake check --accept-flake-config
+

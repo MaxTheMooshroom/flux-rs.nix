@@ -17,8 +17,15 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - uses: DeterminateSystems/determinate-nix-action@v3.21.0
+        with:
+          extra-conf: |
+            extra-substituters=https://flux-rs.cachix.org/ https://cache.flake-hub.com/
+
+      - uses: ./cache-flake-formatter
+        with:
+          cache-name-cachix: flux-rs
 
       - name: "Nix Formatter"
-        run: nix fmt --no-update-lock-file --accept-flake-config
+        run: nix formatter run --no-update-lock-file --accept-flake-config
 
       - uses: autofix-ci/action@v1
