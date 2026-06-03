@@ -14,10 +14,7 @@ jobs:
           persist-credentials: false
           ref: ${{ github.head_ref }}
 
-      - uses: DeterminateSystems/determinate-nix-action@v3.21.0
-        with:
-          extra-conf: |
-            extra-substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://flux-rs.cachix.org/ https://cache.flakehub.com/
+      - uses: ./.github/actions/determinate-nix-action
 
       - uses: ./.github/actions/cache-flake-formatter
         env:
