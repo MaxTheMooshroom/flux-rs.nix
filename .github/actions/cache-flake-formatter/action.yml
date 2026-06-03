@@ -10,6 +10,6 @@ runs:
         which cachix &> /dev/null || nix profile add --accept-flake-config nixpkgs#cachix
 
         if __item=$(nix formatter build --no-link 2> /dev/null); then
-          cachix push flux-rs $(nix path-info ${__item})
+          cachix push flux-rs $(nix path-info --quiet ${__item} 2>/dev/null)
         fi
 
