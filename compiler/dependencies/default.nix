@@ -45,26 +45,14 @@ in
     }:
     let
       mkRustBins = rust-overlay.lib.mkRustBin { } pkgs;
-      toolchain =
-        (
-          fromTOML
-            (
-              builtins.readFile
-                (flux-src.outPath + "/rust-toolchain.toml")
-            )
-        ).toolchain;
+      toolchain = (fromTOML (builtins.readFile (flux-src.outPath + "/rust-toolchain.toml"))).toolchain;
     in
-      mkRustBins.fromRustupToolchain
-        (
-          toolchain
-        //
-          {
-            components =
-              toolchain.components
-            ++
-              [ "rust-analyzer" ];
-          }
-        )
+    mkRustBins.fromRustupToolchain (
+      toolchain
+      // {
+        components = toolchain.components ++ [ "rust-analyzer" ];
+      }
+    )
   );
 
   rustPlatform = makeRustPlatform {
