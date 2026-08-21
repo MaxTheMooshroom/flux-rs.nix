@@ -1,29 +1,5 @@
 {
   "nodes": {
-    "build-support": {
-      "flake": false,
-      "locked": {
-        "path": "build-support",
-        "type": "path"
-      },
-      "original": {
-        "path": "build-support",
-        "type": "path"
-      },
-      "parent": []
-    },
-    "compiler": {
-      "flake": false,
-      "locked": {
-        "path": "compiler",
-        "type": "path"
-      },
-      "original": {
-        "path": "compiler",
-        "type": "path"
-      },
-      "parent": []
-    },
     "flake-module": {
       "flake": false,
       "locked": {
@@ -291,8 +267,6 @@
     },
     "root": {
       "inputs": {
-        "build-support": "build-support",
-        "compiler": "compiler",
         "flake-module": "flake-module",
         "flake-parts": "flake-parts",
         "flux-src": "flux-src",

@@ -31,16 +31,6 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-
-    compiler = {
-      flake = false;
-      url = ./compiler;
-    };
-
-    build-support = {
-      flake = false;
-      url = ./build-support;
-    };
   };
 
   outputs =
@@ -58,7 +48,7 @@
         imports = [
           flake-parts.flakeModules.flakeModules
           inputs.mlib.flakeModules.perSystem-packageSets
-          (import inputs.flake-module)
+          ./flake-module.nix
         ];
 
         flake.flakeModules.default = self.flakeModules.perSystem-moduleArgs;
@@ -87,19 +77,20 @@
             formatter = pkgs.nixfmt-tree;
 
             packageSets = {
-              fluxPackages = mlib.callPackageSetWith pkgs inputs.compiler {
+              fluxPackages = mlib.callPackageSetWith pkgs ./compiler {
                 inherit (inputs)
                   flux-src
                   liquid-fixpoint
                   rust-overlay
 
                   nixpkgs
-                  build-support
                   ;
 
                 inherit (inputs')
                   toolchain2manifest
                   ;
+
+                build-support = ./build-support;
               };
 
               inherit (self'.packageSets.fluxPackages)
