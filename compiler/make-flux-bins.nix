@@ -40,8 +40,8 @@ let
   result = rustPlatform.buildRustPackage (self: {
     name = "flux-rs";
     src = flux-src;
-    # cargoHash = "";
-    cargoHash = "sha256-hlxkZNNubQi3Xt4q/c9i+Ee9Tx+9QaJY6F4O6ZSVjjM=";
+    # cargoHash = lib.fakeHash;
+    cargoHash = "sha256-aP+FlNjN5wtAfyXBTuwu0DESIS5hL6JUWv+F7ERpEoc=";
 
     CARGO_NET_OFFLINE = "true";
     FLUX_TOOLCHAIN_CARGO_VERSION_OVERRIDE = cargo_version;

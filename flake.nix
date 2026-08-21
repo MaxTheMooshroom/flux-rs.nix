@@ -62,6 +62,7 @@
         ];
 
         flake.flakeModules.default = self.flakeModules.perSystem-moduleArgs;
+
         flake.flakeModules.perSystem-moduleArgs = {
           perSystem =
             { system, ... }:
@@ -77,7 +78,6 @@
 
         perSystem =
           {
-            system,
             inputs',
             self',
             pkgs,
@@ -145,7 +145,7 @@
               };
             };
 
-            tests = import ./tests.nix {
+            tests = (import ./tests.nix) {
               inherit
                 pkgs
                 self'

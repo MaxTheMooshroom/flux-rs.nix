@@ -17,7 +17,7 @@ let
   manifest_raw = builtins.fetchurl {
     name = "rust-toolchain-manifest.toml";
     url = builtins.readFile manifest_url;
-    sha256 = "0ymc7bqaclk99ivcyh06s3qas0a1hk1vgjv12b9x6f47ajb6w46x";
+    sha256 = "1imy60c8agif74i39ccsa581lnzbx3qx0fkapqdhp0pfwq8ya45y";
   };
 in
 builtins.fromTOML (builtins.readFile manifest_raw)
