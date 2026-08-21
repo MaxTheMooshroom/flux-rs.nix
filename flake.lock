@@ -97,11 +97,11 @@
     "flux-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1780258434,
-        "narHash": "sha256-JF9dGFDZlT8VBr88VQWmadevunKwSpWdKyXAuyDSnCc=",
+        "lastModified": 1787288376,
+        "narHash": "sha256-LJxQlfAkxAedG+bUwp+N7XgMwXU/ev405/sfqpwdTck=",
         "owner": "MaxTheMooshroom",
         "repo": "flux-rs",
-        "rev": "4fae1479ff4f07e5be5408dc33df7bee8d12cf48",
+        "rev": "91d57562a97b469bfb562faa1eec55f03c428745",
         "type": "github"
       },
       "original": {
