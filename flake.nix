@@ -2,9 +2,13 @@
   description = "Refinement Types for Rust";
 
   inputs = {
-    flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/26.05";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+
     mlib.url = "github:MaxTheMooshroom/mlib.nix";
+    mlib.inputs.flake-parts.follows = "flake-parts";
 
     rust-overlay.url = "github:oxalica/rust-overlay/a6cb2224d975e16b5e67de688c6ad306f7203425";
 
@@ -19,10 +23,6 @@
     };
 
     # nixdoc.url = "github:nix-community/nixdoc";
-    flake-module = {
-      flake = false;
-      url = ./flake-module.nix;
-    };
 
     toolchain2manifest = {
       url = "github:MaxTheMooshroom/rust-toolchain-to-manifest/squeeze-bin";
