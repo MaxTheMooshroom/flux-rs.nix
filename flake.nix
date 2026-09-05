@@ -2,9 +2,13 @@
   description = "Refinement Types for Rust";
 
   inputs = {
-    flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/26.05";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+
     mlib.url = "github:MaxTheMooshroom/mlib.nix";
+    mlib.inputs.flake-parts.follows = "flake-parts";
 
     rust-overlay.url = "github:oxalica/rust-overlay/a6cb2224d975e16b5e67de688c6ad306f7203425";
 
@@ -19,10 +23,6 @@
     };
 
     # nixdoc.url = "github:nix-community/nixdoc";
-    flake-module = {
-      flake = false;
-      url = ./flake-module.nix;
-    };
 
     toolchain2manifest = {
       url = "github:MaxTheMooshroom/rust-toolchain-to-manifest/squeeze-bin";
@@ -30,16 +30,6 @@
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
       };
-    };
-
-    compiler = {
-      flake = false;
-      url = ./compiler;
-    };
-
-    build-support = {
-      flake = false;
-      url = ./build-support;
     };
   };
 
@@ -58,10 +48,11 @@
         imports = [
           flake-parts.flakeModules.flakeModules
           inputs.mlib.flakeModules.perSystem-packageSets
-          (import inputs.flake-module)
+          ./flake-module.nix
         ];
 
         flake.flakeModules.default = self.flakeModules.perSystem-moduleArgs;
+
         flake.flakeModules.perSystem-moduleArgs = {
           perSystem =
             { system, ... }:
@@ -77,7 +68,6 @@
 
         perSystem =
           {
-            system,
             inputs',
             self',
             pkgs,
@@ -87,19 +77,20 @@
             formatter = pkgs.nixfmt-tree;
 
             packageSets = {
-              fluxPackages = mlib.callPackageSetWith pkgs inputs.compiler {
+              fluxPackages = mlib.callPackageSetWith pkgs ./compiler {
                 inherit (inputs)
                   flux-src
                   liquid-fixpoint
                   rust-overlay
 
                   nixpkgs
-                  build-support
                   ;
 
                 inherit (inputs')
                   toolchain2manifest
                   ;
+
+                build-support = ./build-support;
               };
 
               inherit (self'.packageSets.fluxPackages)
@@ -145,7 +136,7 @@
               };
             };
 
-            tests = import ./tests.nix {
+            tests = (import ./tests.nix) {
               inherit
                 pkgs
                 self'

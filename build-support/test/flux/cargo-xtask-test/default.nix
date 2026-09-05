@@ -18,19 +18,18 @@ let
     };
   };
 in
-  fluxPackages.flux-bins.overrideAttrs (
-    final: prev:
-    {
-      name = "flux-source-cargo-xtask-test";
+fluxPackages.flux-bins.overrideAttrs (
+  final: prev: {
+    name = "flux-source-cargo-xtask-test";
 
-      doCheck = true;
-      dontCargoBuild = true;
-      dontCargoInstall = true;
+    doCheck = true;
+    dontCargoBuild = true;
+    dontCargoInstall = true;
 
-      nativeBuildInputs = prev.nativeBuildInputs or [] ++ [
-        cargo-xtask-test-hook
-        fluxPackages.dependencies.z3
-        fluxPackages.dependencies.liquid-fixpoint
-      ];
-    }
-  )
+    nativeBuildInputs = prev.nativeBuildInputs or [ ] ++ [
+      cargo-xtask-test-hook
+      fluxPackages.dependencies.z3
+      fluxPackages.dependencies.liquid-fixpoint
+    ];
+  }
+)

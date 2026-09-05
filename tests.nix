@@ -9,12 +9,12 @@ let
   callTestPackageSet =
     test-set-name:
     let
-      testPath = inputs.build-support.outPath + "/test/${test-set-name}";
+      testPath = ./build-support + "/test/${test-set-name}";
     in
-      mlib.callPackageSetWith pkgs testPath {
-        inherit (inputs) flux-src nixpkgs;
-        inherit (self'.packageSets) fluxPlatform fluxPackages;
-      };
+    mlib.callPackageSetWith pkgs testPath {
+      inherit (inputs) flux-src nixpkgs;
+      inherit (self'.packageSets) fluxPlatform fluxPackages;
+    };
 in
 {
   importCargoLock = callTestPackageSet "import-cargo-lock";
